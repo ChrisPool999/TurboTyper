@@ -7,41 +7,8 @@ function shuffle(array) {
   return array
 }
 
-class TypingPrompt {
-  #promptInitLength = 600;
-  #promptEl = document.querySelector("#word-box-prompt");
-  #input = "";
-  #promptIndex = 0;
-
-  async init() {
-    await this.#addStartingQuotes()
-    this.#addKeyBoardListener()
-  }
-
-  // add logic just in case prompthLength > text
-  async #addStartingQuotes() {
-    const quotes = await this.#getQuotes();
-    let text = quotes.join('');
-
-    for (let i = 0; i < this.#promptInitLength; i++) {
-      this.#promptEl.innerHTML += `<span>${text[i]}</span>`
-    }
-
-    this.lettersEl =  this.#promptEl.querySelectorAll('span')
-  }  
-
-  #addKeyBoardListener() {
-    document.addEventListener('keydown', (event) => {
-      if (event.key === "Backspace" && this.#input.length) {
-        this.#deleteChar()
-      } 
-      if (event.key.length === 1) {
-          this.#addChar(event)
-      }
-    })
-  }
-
-  async #getQuotes() {
+class QuoteService {
+  async getQuotes() {
     if (!this.quotes) {
       let data = await this.#loadQuotes();
       let quotes = data.quotes.map((o => o.quote));
@@ -53,33 +20,100 @@ class TypingPrompt {
   async #loadQuotes() {
     try {
       const res = await fetch('quotes.json');
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
       console.error(err);
     }
   }
 
-  #addChar(event) {
-    if (event.key === "'") {
-      event.preventDefault();
+  reshuffle() {
+    this.quotes = shuffle(this.quotes)
+  }
+}
+
+class TimingService extends EventTarget {
+  #startTime = null;
+  #durationMs = null;
+  #timerId = null;
+
+  start(durationMs = 60000) {
+    this.#durationMs = durationMs;
+    this.#startTime = performance.now();
+
+    this.#timerId = setTimeout(() => {
+      this.dispatchEvent(new Event("timeup"));
+    }, durationMs);
+  }
+
+  getWPM(wordsTyped) {
+    ;
+  }
+}
+
+class TypingPrompt {
+  #quoteService = new QuoteService();
+  #timingService = new TimingService();
+
+  #promptEl = document.querySelector("#word-box-prompt");
+  #promptSize = 600;
+
+  #inputLength = 0;
+  #hasStarted = false;
+
+  async init() {
+    await this.#addStartingQuotes();
+    this.#addKeyBoardListener();
+  }
+
+  async #addStartingQuotes() {
+    const quotes = await this.#quoteService.getQuotes();
+    let text = quotes.join('');
+
+    for (let i = 0; i < this.#promptSize && i < text.length; i++) {
+      this.#promptEl.innerHTML += `<span>${text[i]}</span>`;
     }
 
-    this.#input += event.key;
-    if (this.#input[this.#promptIndex] !== this.lettersEl[this.#promptIndex].innerHTML) {
-      this.lettersEl[this.#promptIndex].style.color = 'red';
-    } else {
-      this.lettersEl[this.#promptIndex].style.color = 'white';
-    }
-    this.#promptIndex += 1;    
+    this.lettersEl = this.#promptEl.querySelectorAll('span');
+  }  
+
+  #addKeyBoardListener() {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === "'") {
+        event.preventDefault();
+      }
+      if (event.key === "Backspace" && this.#inputLength) {
+        this.#deleteChar();
+      } 
+      if (event.key.length !== 1) {
+        return;
+      }
+        
+      this.#addChar(event.key);
+
+      if (!this.#hasStarted) {
+        this.#hasStarted = true;
+        this.#timingService.start(6000);
+      }
+    });
+
+    this.#timingService.addEventListener("timeup", (event) => {
+      console.log("time up");
+    });
+  }
+
+  #addChar(key) {
+    const letterEl =  this.lettersEl[this.#inputLength];
+    const isCorrectLetter = (key === letterEl.innerHTML);
+
+    letterEl.style.color = (isCorrectLetter ? "white" : "red");
+    this.#inputLength += 1;    
   }
 
   #deleteChar() {
-    this.#promptIndex = Math.max(0, this.#promptIndex - 1);
-    this.#input = this.#input.slice(0, -1);
-    this.lettersEl[this.#promptIndex].style.color = 'gray';    
+    if (this.#inputLength > 0) this.#inputLength--;
+    this.lettersEl[this.#inputLength].style.color = 'gray';    
   }
 }
 
 let typingPrompt = new TypingPrompt();
-typingPrompt.init()
+typingPrompt.init();
