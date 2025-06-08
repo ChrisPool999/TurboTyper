@@ -29,31 +29,60 @@ body {
 
 #middle-bar {
   display: grid;
-  grid-template-columns: 1fr auto 4fr;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center; 
 }
 
-#word-box-container {
-  grid-column: 2;
-  justify-self: center;
+#typing-box {
+  position: relative;
+  overflow: hidden;
+  max-height: 300px;
   font-size: 2rem;
-  max-width: 60%;
-}
-
-#timer-info {
-  grid-column: 3;
-  justify-self: end;
-}
-
-#word-box {
+  grid-column: 2;
   background-color: rgba(183, 183, 183, .03);
   border: 12px;
   border-radius: 10px;
   z-index: -1;
+  width: 100%;
 }
 
-#word-box-prompt {
+#typing-box::before,
+#typing-box::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#typing-box::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(37, 37, 37, 1), rgba(0, 0, 0, 0.03));
+}
+
+#typing-box::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(37, 37, 37, 1), rgba(0, 0, 0, 0.03));
+}
+
+#typing-box__prompt {
   display: inline-block;
   margin: 15px;
   color: gray;
+}
+
+#options {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-column: 3;
+  justify-content: center;
+}
+
+#clock {
+  justify-self: center;
+  font-size: 2rem;
 }
