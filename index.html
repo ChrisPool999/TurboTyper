@@ -14,23 +14,28 @@
     <h1 id="site-name">TurboTyper</h1>
   </header>
   <div id="middle-bar">
-      <div id="typing-box">
+      <div id="typing-box" class="vertical-gradient">
         <p id="typing-box__prompt"></p>
       </div>
-    <div id="options">
-      <span id="clock">1:00</span>
-      <div id="options-time">
-        <span>Set time</span>
-        <button>1:00</button>
-        <button>3:00</button>
-        <button>5:00</button>
+    <section id="options">
+      <h2 class="sr-only">Options</h2>
+      <span id="time-left">1:00</span>
+      <div id="options__duration">
+        <h3>Set Time</h3>
+        <div id="duration__buttons">
+          <button class="time-buttons">1:00</button>
+          <button class="time-buttons">3:00</button>
+          <button class="time-buttons">5:00</button>
+        </div>
       </div>
-      <div id="options-input">
-        <span>Toggle</span>
-        <button>Punctuation</button>
-        <button>Case Sensative</button>        
+      <div id="options__toggle">
+        <h3>Toggle</h3>
+        <div id="toggle__buttons">
+          <button>Punctuation</button>
+          <button>Case Sensative</button>    
+        </div>    
       </div>
-    </div>
+    </section>
   </div>
   <script src="foo.js"></script>
 </body>

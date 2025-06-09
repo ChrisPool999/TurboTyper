@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
 body {
   background-color: rgb(37, 37, 37);
   color: white;
 }
+
+/* top header */
 
 #top-bar {
   display: flex;
@@ -27,15 +30,14 @@ body {
   font-style: italic;
 }
 
+/* middle section / typing prompt */
+
 #middle-bar {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  align-items: center; 
 }
 
 #typing-box {
-  position: relative;
-  overflow: hidden;
   max-height: 300px;
   font-size: 2rem;
   grid-column: 2;
@@ -43,11 +45,15 @@ body {
   border: 12px;
   border-radius: 10px;
   z-index: -1;
-  width: 100%;
+  overflow: hidden;
 }
 
-#typing-box::before,
-#typing-box::after {
+.vertical-gradient {
+  position: relative;
+}
+
+.vertical-gradient::before,
+.vertical-gradient::after {
   content: "";
   position: absolute;
   left: 0;
@@ -57,12 +63,12 @@ body {
   pointer-events: none;
 }
 
-#typing-box::before {
+.vertical-gradient::before {
   top: 0;
   background: linear-gradient(to bottom, rgba(37, 37, 37, 1), rgba(0, 0, 0, 0.03));
 }
 
-#typing-box::after {
+.vertical-gradient::after {
   bottom: 0;
   background: linear-gradient(to top, rgba(37, 37, 37, 1), rgba(0, 0, 0, 0.03));
 }
@@ -71,7 +77,10 @@ body {
   display: inline-block;
   margin: 15px;
   color: gray;
+  overflow: hidden;
 }
+
+/* middle section / options TOP level */
 
 #options {
   display: grid;
@@ -80,9 +89,55 @@ body {
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   grid-column: 3;
   justify-content: center;
+  overflow: hidden;
 }
 
-#clock {
+#time-left {
   justify-self: center;
   font-size: 2rem;
+}
+
+/* middle section / options MIDDLE level */
+
+#options__duration > h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+#duration__buttons {
+  display: flex;
+  flex-direction: row;
+  font-family: 'Inter', sans-serif;
+}
+
+.time-buttons {
+  width: 100%;
+  margin: 3px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.time-buttons:first-child {
+  margin-left: 0px;
+}
+
+#options__time-selectors:last-child {
+  margin-right: 0px;
+}
+
+/* middle section / options BOT level */
+
+#options__toggle {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+}
+
+#toggles__buttons {
+ display: flex;
+ justify-content: space-evenly;
+}
+
+#options__toggle > h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
 }
