@@ -9,34 +9,34 @@
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <header id="top-bar">
-    <img id="logo" src="assets/favicon.ico" alt="TurboTyper Logo" />
-    <h1 id="site-name">TurboTyper</h1>
+  <header class="site-header">
+    <img class="header-logo" src="assets/favicon.ico" alt="TurboTyper Logo" />
+    <h1 class="site-title">TurboTyper</h1>
   </header>
-  <div id="middle-bar">
-      <div id="typing-box" class="vertical-gradient">
-        <p id="typing-box__prompt"></p>
+  <main class="main-content">
+      <div class="typing-area u-vertical-gradient">
+        <p class="typing-area__prompt"></p>
       </div>
-    <section id="options">
+    <aside class="options">
       <h2 class="sr-only">Options</h2>
-      <span id="time-left">1:00</span>
-      <div id="options__duration">
+      <time datetime="PT1M" class="options__time-left">1:00</time>
+      <section>
         <h3>Set Time</h3>
-        <div id="duration__buttons">
-          <button class="time-buttons">1:00</button>
-          <button class="time-buttons">3:00</button>
-          <button class="time-buttons">5:00</button>
-        </div>
+        <div class="options__duration-group">
+          <button class="options__button options__button--duration">1:00</button>
+          <button class="options__button options__button--duration">3:00</button>
+          <button class="options__button options__button--duration">5:00</button>
+        </section>
       </div>
-      <div id="options__toggle">
+      <section>
         <h3>Toggle</h3>
-        <div id="toggle__buttons">
-          <button>Punctuation</button>
-          <button>Case Sensative</button>    
+        <div class="options__toggle-group">
+          <button class="options__button options__button--toggle">Punctuation</button>
+          <button class="options__button options__button--toggle">Case Sensitive</button>    
         </div>    
-      </div>
-    </section>
-  </div>
+      </section>
+    </aside>
+  </main>
   <script src="foo.js"></script>
 </body>
 </html>

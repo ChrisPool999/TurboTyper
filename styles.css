@@ -1,14 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 
+/* reusable */
+
+.options__button {
+  width: 100%;
+  margin: 3px;
+  font-family: 'Inter', sans-serif;
+  font-size: .8rem;
+}
+
 body {
   background-color: rgb(37, 37, 37);
   color: white;
 }
 
-/* top header */
+/* site header */
 
-#top-bar {
+.site-header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,15 +25,14 @@ body {
   margin-right: 60px;
 }
 
-#logo {
+.header-logo {
   width: 60px;
   height: 60px;
   padding-right: 5px;
   padding-bottom: 5px;
 }
 
-#site-name {
-  font: bold;
+.site-title {
   font-size: 3rem;
   font-family: 'Bebas Neue', cursive;
   font-style: italic;
@@ -32,28 +40,27 @@ body {
 
 /* middle section / typing prompt */
 
-#middle-bar {
+.main-content {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
 }
 
-#typing-box {
+.typing-area {
   max-height: 300px;
   font-size: 2rem;
   grid-column: 2;
   background-color: rgba(183, 183, 183, .03);
-  border: 12px;
   border-radius: 10px;
   z-index: -1;
   overflow: hidden;
 }
 
-.vertical-gradient {
+.u-vertical-gradient {
   position: relative;
 }
 
-.vertical-gradient::before,
-.vertical-gradient::after {
+.u-vertical-gradient::before,
+.u-vertical-gradient::after {
   content: "";
   position: absolute;
   left: 0;
@@ -63,17 +70,17 @@ body {
   pointer-events: none;
 }
 
-.vertical-gradient::before {
+.u-vertical-gradient::before {
   top: 0;
   background: linear-gradient(to bottom, rgba(37, 37, 37, 1), rgba(0, 0, 0, 0.03));
 }
 
-.vertical-gradient::after {
+.u-vertical-gradient::after {
   bottom: 0;
   background: linear-gradient(to top, rgba(37, 37, 37, 1), rgba(0, 0, 0, 0.03));
 }
 
-#typing-box__prompt {
+.typing-area__prompt {
   display: inline-block;
   margin: 15px;
   color: gray;
@@ -82,62 +89,36 @@ body {
 
 /* middle section / options TOP level */
 
-#options {
-  display: grid;
+.options {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  width: 100%;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-  grid-column: 3;
+  width: 50%;
+  justify-self: center;
   justify-content: center;
-  overflow: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
-#time-left {
+.options__time-left {
   justify-self: center;
+  align-self: center;
   font-size: 2rem;
 }
 
 /* middle section / options MIDDLE level */
 
-#options__duration > h3 {
+.options h3 {
   margin-bottom: 10px;
-  font-size: 1.2rem;
+  font-size: 1.2rem;  
 }
 
-#duration__buttons {
+.options__duration-group,
+.options__toggle-group {
   display: flex;
-  flex-direction: row;
-  font-family: 'Inter', sans-serif;
-}
-
-.time-buttons {
-  width: 100%;
-  margin: 3px;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.time-buttons:first-child {
-  margin-left: 0px;
-}
-
-#options__time-selectors:last-child {
-  margin-right: 0px;
+  gap: 6px;
 }
 
 /* middle section / options BOT level */
 
-#options__toggle {
-  display: flex;
-  flex-direction: column;
-  font-family: 'Inter', sans-serif;
-}
-
-#toggles__buttons {
- display: flex;
- justify-content: space-evenly;
-}
-
-#options__toggle > h3 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-}
+/* .options__button--toggle { */
+/* } */

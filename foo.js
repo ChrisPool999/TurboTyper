@@ -54,7 +54,7 @@ class TypingPrompt {
   #quoteService = new QuoteService();
   #timingService = new TimingService();
 
-  #promptEl = document.querySelector("#typing-box__prompt");
+  #promptEl = document.querySelector(".typing-area__prompt");
   #promptSize = 600;
 
   #inputLength = 0;
