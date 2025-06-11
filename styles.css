@@ -6,8 +6,15 @@
 .options__button {
   width: 100%;
   margin: 3px;
+  border-color: #363538;
   font-family: 'Inter', sans-serif;
   font-size: .8rem;
+  cursor: pointer;
+}
+
+.options__button--active {
+  background-color: #E5C100;
+  border-color: #363538;
 }
 
 body {
@@ -117,8 +124,3 @@ body {
   display: flex;
   gap: 6px;
 }
-
-/* middle section / options BOT level */
-
-/* .options__button--toggle { */
-/* } */

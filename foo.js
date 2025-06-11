@@ -50,7 +50,34 @@ class TimingService extends EventTarget {
   }
 }
 
-class TypingPrompt {
+class Options {
+
+  #changeDuration(btn) {
+    document.querySelectorAll(".options__button--duration").forEach(durationBtn => {
+      durationBtn.classList.remove("options__button--active");
+    });
+    btn.classList.toggle("options__button--active");
+
+    document.querySelector(".options__time-left").innerHTML = btn.innerHTML;
+  }
+
+  addButtonListener() {
+
+    document.querySelectorAll(".options__button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (btn.classList.contains("options__button--duration")) {
+          this.#changeDuration(btn);
+        };
+
+        if (btn.classList.contains("options__button--toggle")) {
+          btn.classList.toggle("options__button--active");        
+        }
+      })      
+    });
+  }
+}
+
+class TypingArea {
   #quoteService = new QuoteService();
   #timingService = new TimingService();
 
@@ -104,7 +131,6 @@ class TypingPrompt {
   #addChar(key) {
     const letterEl =  this.lettersEl[this.#inputLength];
     const isCorrectLetter = (key === letterEl.innerHTML);
-
     letterEl.style.color = (isCorrectLetter ? "white" : "red");
     this.#inputLength += 1;    
   }
@@ -115,5 +141,8 @@ class TypingPrompt {
   }
 }
 
-let typingPrompt = new TypingPrompt();
+let typingPrompt = new TypingArea();
 typingPrompt.init();
+
+let options = new Options();
+options.addButtonListener();
