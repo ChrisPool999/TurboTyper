@@ -1,0 +1,14 @@
+gradient -- either top-bot-left-right
+
+Buttons:
+  single selection button group
+  toggle buttons
+
+navbar:
+  navbars with logo + name + dropdown, etc
+  dropdown with X that moves to 3 line bar 
+
+animations:
+  type-out animations
+
+dropdown that drops down to multiple choices, eg bars (think samsung)
