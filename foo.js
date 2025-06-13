@@ -7,6 +7,12 @@ function shuffle(array) {
   return array
 }
 
+// QuoteSerivce - 
+// TimingService - calls typingService to reset after time ends, calls Options to update it's timer HTML 
+// options - 
+// typingService - calls timing service to start clock, calls typingRenderer to render text input
+// typingRenderer - 
+
 class QuoteService {
   async getQuotes() {
     if (!this.quotes) {
@@ -51,12 +57,7 @@ class TimingService extends EventTarget {
 }
 
 class Options {
-  #timeService;
-
-  constructor(timeService) {
-    this.#timeService = timeService;
-  }
-
+  
   #changeDuration(btn) {
     document.querySelectorAll(".options__button--duration").forEach(durationBtn => {
       durationBtn.classList.remove("options__button--active");
@@ -82,16 +83,16 @@ class Options {
 }
 
 class TypingService {
-  #timingService = new TimingService();
+  #timingService;
   #renderer;
   #hasStarted = false;
 
-  constructor(renderer) {
+  constructor(renderer, timingService) {
     this.#renderer = renderer;
-    this.addKeyBoardListener();
+    this.#timingService = timingService;
   }
 
-  addKeyBoardListener() {
+  init() {
     this.#timingService.addEventListener("timeup", (event) => {
       console.log("time up");
     });    
@@ -116,13 +117,17 @@ class TypingService {
 }
 
 class TypingRenderer {
-  #quoteService = new QuoteService();
   #textContainer = document.querySelector(".typing-area__prompt");
   #scrollDistancePx = 0;
   #inputLength = 0;
   #textSize = 600;
+  #initialText;
 
-  constructor() {
+  constructor(initialText) {
+    this.#initialText = initialText
+  }
+
+  init() {
     this.#addInitialText();
   }
 
@@ -134,10 +139,8 @@ class TypingRenderer {
     return this.textEl[this.#inputLength];
   }
 
-  async #addInitialText() {
-    const quotes = await this.#quoteService.getQuotes();
-    let text = quotes.join('');
-
+  #addInitialText() {
+    let text = this.#initialText;
     for (let i = 0; i < this.#textSize && i < text.length; i++) {
       this.#textContainer.innerHTML += `<span>${text[i]}</span>`;
     }
@@ -189,8 +192,18 @@ class TypingRenderer {
   }
 }
 
-let renderer = new TypingRenderer();
-let typingService = new TypingService(renderer);
+(async () => {
+  let timerService = new TimingService()
 
-let options = new Options();
-options.addButtonListener();
+  let quoteService = new QuoteService();
+  let initialText = await quoteService.getQuotes();
+
+  let renderer = new TypingRenderer(initialText.join(''));
+  renderer.init();
+
+  let typingService = new TypingService(renderer, timerService);
+  typingService.init();
+
+  let options = new Options(timerService);
+  options.addButtonListener();
+})();
