@@ -7,12 +7,6 @@ function shuffle(array) {
   return array
 }
 
-// QuoteSerivce - 
-// TimingService - calls typingService to reset after time ends, calls Options to update it's timer HTML 
-// options - 
-// typingService - calls timing service to start clock, calls typingRenderer to render text input
-// typingRenderer - 
-
 class QuoteService {
   async getQuotes() {
     if (!this.quotes) {
@@ -38,37 +32,36 @@ class QuoteService {
 }
 
 class TimingService extends EventTarget {
-  #startTime = null;
-  #durationMs = null;
-  #timerId = null;
+  #startTime;
+  #durationMs;
+  #timerId;
 
-  start(durationMs = 60000) {
+  start(durationMs = 60000, callback) {
+    if (this.#timerId) return;
+
     this.#durationMs = durationMs;
     this.#startTime = performance.now();
 
     this.#timerId = setTimeout(() => {
+      console.log(123);
       this.dispatchEvent(new Event("timeup"));
     }, durationMs);
   }
 
-  getWPM(wordsTyped) {
+  MsToMinSec(ms) {
+
+  }
+
+  calcWPM(wordsTyped) {
     ;
   }
 }
 
 class Options {
-  
-  #changeDuration(btn) {
-    document.querySelectorAll(".options__button--duration").forEach(durationBtn => {
-      durationBtn.classList.remove("options__button--active");
-    });
-    btn.classList.toggle("options__button--active");
+  #buttonListener;
 
-    document.querySelector(".options__time-left").innerHTML = btn.innerHTML;
-  }
-
-  addButtonListener() {
-    document.querySelectorAll(".options__button").forEach(btn => {
+  mountButtonListener() {
+    this.#buttonListener = document.querySelectorAll(".options__button").forEach(btn => {
       btn.addEventListener("click", () => {
         if (btn.classList.contains("options__button--duration")) {
           this.#changeDuration(btn);
@@ -80,39 +73,66 @@ class Options {
       })      
     });
   }
+
+  #changeDuration(btn) {
+    document.querySelectorAll(".options__button--duration").forEach(durationBtn => {
+      durationBtn.classList.remove("options__button--active");
+    });
+    btn.classList.toggle("options__button--active");
+
+    document.querySelector(".options__time-left").innerHTML = btn.innerHTML;
+  }
+
+  #verifyTimerFormat() {
+
+  }
+
+  #updateTimer() {
+
+  }
+
+  #reset() {
+
+  }
 }
 
 class TypingService {
-  #timingService;
-  #renderer;
-  #hasStarted = false;
+  renderer;
+  timingService;
+  hasStarted = false;
 
   constructor(renderer, timingService) {
-    this.#renderer = renderer;
-    this.#timingService = timingService;
+    this.renderer = renderer;
+    this.timingService = timingService;
+    this.#bindHandlers();
   }
 
-  init() {
-    this.#timingService.addEventListener("timeup", (event) => {
-      console.log("time up");
-    });    
+  enable() {
+    this.timingService.addEventListener("timeup", this.boundDisable);    
+    document.addEventListener('keydown', this.boundInputHandler);
+  }
+
+  disable() {
+    this.timingService.removeEventListener('timeup', this.boundDisable);
+    document.removeEventListener('keydown', this.boundInputHandler);
+  }
+
+  inputHandler(event) {
+    if (event.key === "'") event.preventDefault();
+    if (event.key === "Backspace") this.renderer.deleteLetter();
     
-    document.addEventListener('keydown', (event) => {
-      if (event.key === "'") event.preventDefault();
-      
-      if (event.key === "Backspace") {
-        this.#renderer.deleteLetter();
-      } 
-      
-      if (event.key.length !== 1) return;
+    if (event.key.length !== 1) return;
+    this.renderer.addLetter(event.key);
 
-      this.#renderer.addLetter(event.key);
+    if (!this.hasStarted) {
+      this.hasStarted = true;
+      this.timingService.start(3000);
+    }        
+  }
 
-      if (!this.#hasStarted) {
-        this.#hasStarted = true;
-        this.#timingService.start();
-      }        
-    });
+  #bindHandlers() {
+    this.boundDisable = this.disable.bind(this);
+    this.boundInputHandler = this.inputHandler.bind(this);
   }
 }
 
@@ -127,7 +147,7 @@ class TypingRenderer {
     this.#initialText = initialText
   }
 
-  init() {
+  mount() {
     this.#addInitialText();
   }
 
@@ -166,9 +186,7 @@ class TypingRenderer {
   }
 
   deleteLetter() {
-    if (!this.#inputLength) {
-      return;
-    }
+    if (!this.#inputLength) return;
     
     this.#getCurrLetterEl().classList.remove("typing-area__letter--active");    
     this.#inputLength--;
@@ -193,17 +211,17 @@ class TypingRenderer {
 }
 
 (async () => {
-  let timerService = new TimingService()
+  let timer = new TimingService()
 
-  let quoteService = new QuoteService();
-  let initialText = await quoteService.getQuotes();
+  let quotes = new QuoteService();
+  let initialText = await quotes.getQuotes();
 
-  let renderer = new TypingRenderer(initialText.join(''));
-  renderer.init();
+  let typingUI = new TypingRenderer(initialText.join(''));
+  typingUI.mount();
 
-  let typingService = new TypingService(renderer, timerService);
-  typingService.init();
+  let inputListener = new TypingService(typingUI, timer);
+  inputListener.enable();
 
-  let options = new Options(timerService);
-  options.addButtonListener();
+  let options = new Options(timer);
+  options.mountButtonListener();
 })();
